@@ -1,0 +1,47 @@
+{
+    "id": "http://some.site.somewhere/entry-schema#",
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "description": "schema for an sample attribute ",
+    "type": "object",
+    "required": [ "oneOfField" ],
+    "properties": {
+
+        "simpleField": {
+            "type": "string"
+        },
+
+        "oneOfField": {
+            "type": "object",
+            "oneOf": [
+                { "$ref": "#/definitions/fooType" },
+                { "$ref": "#/definitions/barType" },
+                { "type": "string"}
+            ]
+        }
+    },
+    "definitions": {
+        "fooType": {
+            "$schema": "http://json-schema.org/draft-04/schema#",
+            "description": "schema for an sample attribute ",
+            "type": "object",
+            "properties": {
+                "foo": {
+                    "type": "object"
+                }
+            }
+        },
+        "barType": {
+            "$schema": "http://json-schema.org/draft-04/schema#",
+            "description": "schema for an sample attribute ",
+            "type": "object",
+            "properties": {
+                "bar": {
+                    "type": "string"
+                },
+                "baz": {
+                    "type": "date"
+                }
+            }
+        }
+    }
+}
