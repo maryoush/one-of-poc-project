@@ -79,7 +79,7 @@ public class SimplePojoV6 {
         }
     }
 
-    private static abstract class ValueGetterFallbackApplier<T>  {
+    static abstract class ValueGetterFallbackApplier<T>  {
 
         private final ValueGetterFallback<T> fallback;
 
