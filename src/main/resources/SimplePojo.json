@@ -3,19 +3,27 @@
     "$schema": "http://json-schema.org/draft-04/schema#",
     "description": "schema for an sample attribute ",
     "type": "object",
-    "required": [ "oneOfField" ],
+    "required": [ "dummyField" ],
     "properties": {
 
         "simpleField": {
             "type": "string"
         },
 
-        "oneOfField": {
+        "dummyField": {
             "type": "object",
             "oneOf": [
                 { "$ref": "#/definitions/fooType" },
                 { "$ref": "#/definitions/barType" },
                 { "type": "string"}
+            ]
+        },
+
+        "other": {
+            "type": "object",
+            "oneOf": [
+                { "$ref": "#/definitions/barType" },
+                { "type": "number"}
             ]
         }
     },
