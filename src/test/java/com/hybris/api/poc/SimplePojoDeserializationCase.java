@@ -1,14 +1,8 @@
 package com.hybris.api.poc;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.databind.deser.BeanDeserializerFactory;
-import com.fasterxml.jackson.databind.deser.DefaultDeserializationContext;
-import com.hybris.api.poc.mapper.CustomDeserializationContext;
-import com.hybris.api.poc.mapper.CustomObjectMapperFactory;
+import com.hybris.api.poc.jackson.CustomObjectMapperFactory;
 import org.junit.Assert;
 import org.junit.Test;
 

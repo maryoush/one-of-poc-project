@@ -1,4 +1,4 @@
-package com.hybris.api.poc.mapper;
+package com.hybris.api.poc.model;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

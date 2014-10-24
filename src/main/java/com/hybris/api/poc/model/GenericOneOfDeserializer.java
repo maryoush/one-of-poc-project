@@ -1,4 +1,4 @@
-package com.hybris.api.poc.mapper;
+package com.hybris.api.poc.model;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;

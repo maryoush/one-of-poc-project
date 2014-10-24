@@ -3,7 +3,7 @@ package com.hybris.api.poc;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.common.base.Preconditions;
-import com.hybris.api.poc.mapper.IsOneOfTypeField;
+import com.hybris.api.poc.model.IsOneOfTypeField;
 
 import java.util.Map;
 

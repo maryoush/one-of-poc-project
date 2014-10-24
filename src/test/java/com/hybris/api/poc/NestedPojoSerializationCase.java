@@ -2,7 +2,7 @@ package com.hybris.api.poc;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableMap;
-import com.hybris.api.poc.mapper.CustomObjectMapperFactory;
+import com.hybris.api.poc.jackson.CustomObjectMapperFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
