@@ -1,14 +1,16 @@
 package com.hybris.api.poc;
 
-import java.util.Date;
+import com.fasterxml.jackson.annotation.JsonTypeName;
 
 /**
  * Created by i303813 on 16/10/14.
  */
+//@JsonTypeName("BarType")
 public class BarType {
 
     private String bar;
-    private Date baz;
+
+    private Number baz;
 
     public String getBar() {
         return bar;
@@ -18,11 +20,12 @@ public class BarType {
         this.bar = bar;
     }
 
-    public Date getBaz() {
+    public Number getBaz() {
         return baz;
     }
 
-    public void setBaz(Date baz) {
+    public void setBaz(Number baz) {
         this.baz = baz;
     }
+
 }

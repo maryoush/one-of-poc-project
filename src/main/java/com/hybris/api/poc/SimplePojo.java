@@ -1,79 +1,67 @@
 package com.hybris.api.poc;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.DeserializationContext;
+import com.fasterxml.jackson.databind.JsonDeserializer;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.common.base.Preconditions;
+
+import java.io.IOException;
 
 public class SimplePojo {
 
     private String simpleField;
 
+    @JsonDeserialize(using = DummyFieldOneOfDeserializer.class)
+    @JsonProperty(value = "dummy")
     private Object dummyField;
 
-    private Object other;
+    private static class DummyFieldOneOfDeserializer extends JsonDeserializer<Object> {
 
-    /**
-     * Represents a possible type of property {@link com.hybris.api.poc.SimplePojo#dummyField}.
-     */
-    static enum DUMMYFIELD
-    {
-        /**
-         * Possible one-of type {@link com.hybris.api.poc.FooType} for {@link SimplePojo#dummyField}
-         */
-        FOOTYPE(FooType.class),
-        /**
-         * Possible one-of type {@link com.hybris.api.poc.BarType} for {@link  SimplePojo#dummyField}
-         */
-        BARTYPE(BarType.class),
-        /**
-         * Possible one-of type {@link java.lang.String} for {@link  SimplePojo#dummyField}
-         */
-        STRING(String.class);
+        private static Class<?>[] SUPPORTED_TYPES = {FooType.class, BarType.class, String.class};
 
-        private Class clazz;
+        @Override
+        public Object deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
 
-        DUMMYFIELD(final Class givenClazz)
-        {
-            clazz = givenClazz;
+            return OneOfDeserializerUtility.deserialize(jp, SUPPORTED_TYPES);
         }
 
     }
 
 
-    static enum OTHER
-    {
-        /**
-         * Possible one-of type {@link com.hybris.api.poc.BarType} for {@link SimplePojo#other}
-         */
-        BARTYPE(BarType.class),
-        /**
-         * Possible one-of type {@link java.lang.Number} for {@link SimplePojo#dummyField}
-         */
-        NUMBER(Number.class);
+    @JsonDeserialize(using = OtherFieldOneOfDeserializer.class)
+    @JsonProperty(value = "other")
+    private Object otherField;
 
-        private Class clazz;
+    private static class OtherFieldOneOfDeserializer extends JsonDeserializer<Object> {
 
-        OTHER(final Class givenClazz)
-        {
-            clazz = givenClazz;
+        private static Class<?>[] SUPPORTED_TYPES = {BarType.class, Number.class};
+
+        @Override
+        public Object deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
+
+            return OneOfDeserializerUtility.deserialize(jp, SUPPORTED_TYPES);
         }
-
     }
 
-    public String getSimpleField() {
+    public String getSimple() {
         return simpleField;
     }
 
-    public void setSimpleField(String simpleField) {
-        this.simpleField = simpleField;
+    public void setSimple(String simple) {
+        this.simpleField = simple;
     }
 
 
     /**
      * A type not safe getter of the one of attribute
-     *
+     * <p/>
      * <pre>
      *     {@code
      *
-     *       "dummyField": {
+     *       "dummy": {
      *              "type": "object",
      *                      "oneOf": [
      *                           { "$ref": "#/definitions/fooType" },
@@ -86,126 +74,149 @@ public class SimplePojo {
      *     }
      * </pre>
      * It can return one of the types :
-     *  {@link com.hybris.api.poc.FooType }
-     *  {@link com.hybris.api.poc.BarType}
-     *  {@link java.lang.String}
-     *
+     * {@link com.hybris.api.poc.FooType }
+     * {@link com.hybris.api.poc.BarType}
+     * {@link java.lang.String}
+     * <p/>
      * eg. if called as:
      * <pre>
      *     final FooType result = pojo.getValue();
      * </pre>
-     *
+     * <p/>
      * in that cases it might turn out to throw an {@llink ClassCastException} if the current value
      * is not of typ of above
-     *
+     * <p/>
      * It can be also called safely as
      * <code>
-     *   final Object result = pojo.getValue();
+     * final Object result = pojo.getValue();
      * </code>
-     *
+     * <p/>
      * Remember this method still can yield a null.
-     *
-     *
+     * <p/>
+     * <p/>
      * requires of isOf call before, might cause ClassCast Exception
      *
      * @param <T> the expected type to be returned
      * @return a concrete of above types
      */
-    public <T> T getDummyField() throws ClassCastException {
+    public <T> T getDummy() throws ClassCastException {
         return (T) dummyField;
     }
 
     /**
      * Provides a reference check.
      * Hint.
-     * Use it for check if the #dummyField is null reference, which can not be
+     * Use it for check if the #dummy is null reference, which can not be
      * easily achieved with #isValueOf.
-     *
+     * <p/>
      * It has the same result as:
      * <code>
-     *     getDummyFieldValue()!=null;
+     * getDummyValue()!=null;
      * </code>
      *
-     *
-     * @return true if the #dummyField is not null reference
+     * @return true if the #dummy is not null reference
      */
-    public boolean hasDummyFieldValue() {
-        return dummyField !=null;
+    public boolean hasDummyValue() {
+        return dummyField != null;
     }
 
     /**
-     * Checks whether the attribute of #dummyField is of given type.
+     * Checks whether the attribute of #dummy is of given type.
      * Beware that it keeps the contract of the isInstanceOf construct, so in case it is null
      * none of parameters  will actually return true.
-     * @param givenClazz a type to be checked against
-     * @return true if the given type matches the exact value of #dummyField in sense of instance type
+     *
+     * @param givenClazz a type to be checked against, expected values
+     *                   <ul>
+     *                   <li> {@link com.hybris.api.poc.FooType } </li>
+     *                   <li> {@link com.hybris.api.poc.BarType} </li>
+     *                   <li> {@link java.lang.String}</li>
+     *                   </ul>
+     *                   <p/>
+     *                   according to JSON schema,
+     *                   <pre>
+     *                                                                                                                                                                                         {@code
+     *
+     *                                                                                                                                                                                           "dummy": {
+     *                                                                                                                                                                                                  "type": "object",
+     *                                                                                                                                                                                                          "oneOf": [
+     *                                                                                                                                                                                                               { "$ref": "#/definitions/fooType" },
+     *                                                                                                                                                                                                               { "$ref": "#/definitions/barType" },
+     *                                                                                                                                                                                                               { "type": "string"}
+     *                                                                                                                                                                                                              ]
+     *                                                                                                                                                                                                          }
+     *
+     *
+     *                                                                                                                                                                                         }
+     *                                                                                                                                                                                     </pre>
+     * @return true if the given type matches the exact value of #dummy in sense of instance type
      * @throws java.lang.IllegalArgumentException if the passed givenClazz is null.
      */
-    public boolean isDummyFieldOf(final DUMMYFIELD givenClazz) throws IllegalArgumentException {
+    public boolean isDummyOf(final Class givenClazz) throws IllegalArgumentException {
         Preconditions.checkArgument(givenClazz != null);
-        if(dummyField == null)
-        {
+        if (dummyField == null) {
             return false;
         }
-        return  givenClazz.clazz.isAssignableFrom(dummyField.getClass());
+        return givenClazz.isAssignableFrom(dummyField.getClass());
     }
 
     /**
-     * Type specific setter for #dummyField;
-     * @param dummyField a reference to be set for #dummyField
+     * Type specific setter for #dummy;
+     *
+     * @param dummy a reference to be set for #dummy
      */
-    public void setDummyField(final FooType dummyField) {
-        this.dummyField = dummyField;
+    @JsonIgnore
+    public void setDummy(final FooType dummy) {
+        this.dummyField = dummy;
     }
 
     /**
-     * Type specific setter for #dummyField;
-     * @param dummyField a reference to be set for #dummyField
+     * Type specific setter for #dummy;
+     *
+     * @param dummy a reference to be set for #dummy
      */
-    public void setDummyField(final BarType dummyField) {
-        this.dummyField = dummyField;
+    @JsonIgnore
+    public void setDummy(final BarType dummy) {
+        this.dummyField = dummy;
     }
 
     /**
-     * Type specific setter for #dummyField;
-     * @param dummyField a reference to be set for #dummyField
+     * Type specific setter for #dummy;
+     *
+     * @param dummy a reference to be set for #dummy
      */
-    public void setDummyField(final String dummyField) {
-        this.dummyField = dummyField;
+    @JsonIgnore
+    public void setDummy(final String dummy) {
+        this.dummyField = dummy;
     }
-
 
 
     //################
 
     public <T> T getOther() throws ClassCastException {
-        return (T) other;
+        return (T) otherField;
     }
 
     public boolean hasOtherValue() {
-        return other !=null;
+        return otherField != null;
     }
 
-    public boolean isOtherOf(final OTHER givenClazz) throws IllegalArgumentException {
+    public boolean isOtherOf(final Class givenClazz) throws IllegalArgumentException {
         Preconditions.checkArgument(givenClazz != null);
-        if(other == null)
-        {
+        if (otherField == null) {
             return false;
         }
-        return  givenClazz.clazz.isAssignableFrom(other.getClass());
+        return givenClazz.isAssignableFrom(otherField.getClass());
     }
 
 
-    public void setOther(final FooType given) {
-        this.other = given;
+    @JsonIgnore
+    public void setOther(final BarType given) {
+        this.otherField = given;
     }
 
-
-    public void setOtherField(final BarType given) {
-        this.other = given;
+    @JsonIgnore
+    public void setOther(final Number given) {
+        this.otherField = given;
     }
 
-    public void setOtherField(final String given) {
-        this.other = given;
-    }
 }

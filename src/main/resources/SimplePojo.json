@@ -3,14 +3,14 @@
     "$schema": "http://json-schema.org/draft-04/schema#",
     "description": "schema for an sample attribute ",
     "type": "object",
-    "required": [ "dummyField" ],
+    "required": [ "dummy" ],
     "properties": {
 
-        "simpleField": {
+        "simple": {
             "type": "string"
         },
 
-        "dummyField": {
+        "dummy": {
             "type": "object",
             "oneOf": [
                 { "$ref": "#/definitions/fooType" },
@@ -47,7 +47,7 @@
                     "type": "string"
                 },
                 "baz": {
-                    "type": "date"
+                    "type": "number"
                 }
             }
         }
