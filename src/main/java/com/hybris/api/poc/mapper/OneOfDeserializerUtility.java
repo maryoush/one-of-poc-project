@@ -1,4 +1,4 @@
-package com.hybris.api.poc;
+package com.hybris.api.poc.mapper;
 
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -12,7 +12,7 @@ import java.io.IOException;
 /**
  * TODO provide a custom setup for expected types in order of occurrence
  */
-public class OneOfDeserializerUtility {
+class OneOfDeserializerUtility {
 
     static Object deserialize(final JsonParser jp, final Class[] supportedTypes) throws IOException {
 

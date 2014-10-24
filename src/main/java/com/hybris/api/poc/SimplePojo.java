@@ -2,49 +2,20 @@ package com.hybris.api.poc;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.google.common.base.Preconditions;
-
-import java.io.IOException;
+import com.hybris.api.poc.mapper.IsOneOfTypeField;
 
 public class SimplePojo {
 
     private String simpleField;
 
-    @JsonDeserialize(using = DummyFieldOneOfDeserializer.class)
+    @IsOneOfTypeField({FooType.class, BarType.class, String.class})
     @JsonProperty(value = "dummy")
     private Object dummyField;
 
-    private static class DummyFieldOneOfDeserializer extends JsonDeserializer<Object> {
-
-        private static Class<?>[] SUPPORTED_TYPES = {FooType.class, BarType.class, String.class};
-
-        @Override
-        public Object deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
-
-            return OneOfDeserializerUtility.deserialize(jp, SUPPORTED_TYPES);
-        }
-
-    }
-
-
-    @JsonDeserialize(using = OtherFieldOneOfDeserializer.class)
+    @IsOneOfTypeField({BarType.class, Number.class})
     @JsonProperty(value = "other")
     private Object otherField;
-
-    private static class OtherFieldOneOfDeserializer extends JsonDeserializer<Object> {
-
-        private static Class<?>[] SUPPORTED_TYPES = {BarType.class, Number.class};
-
-        @Override
-        public Object deserialize(JsonParser jp, DeserializationContext ctxt) throws IOException {
-
-            return OneOfDeserializerUtility.deserialize(jp, SUPPORTED_TYPES);
-        }
-    }
 
     public String getSimple() {
         return simpleField;
@@ -134,20 +105,20 @@ public class SimplePojo {
      *                   <p/>
      *                   according to JSON schema,
      *                   <pre>
-     *                                                                                                                                                                                         {@code
+     *                                                                                                                                                                                                           {@code
      *
-     *                                                                                                                                                                                           "dummy": {
-     *                                                                                                                                                                                                  "type": "object",
-     *                                                                                                                                                                                                          "oneOf": [
-     *                                                                                                                                                                                                               { "$ref": "#/definitions/fooType" },
-     *                                                                                                                                                                                                               { "$ref": "#/definitions/barType" },
-     *                                                                                                                                                                                                               { "type": "string"}
-     *                                                                                                                                                                                                              ]
-     *                                                                                                                                                                                                          }
+     *                                                                                                                                                                                                             "dummy": {
+     *                                                                                                                                                                                                                    "type": "object",
+     *                                                                                                                                                                                                                            "oneOf": [
+     *                                                                                                                                                                                                                                 { "$ref": "#/definitions/fooType" },
+     *                                                                                                                                                                                                                                 { "$ref": "#/definitions/barType" },
+     *                                                                                                                                                                                                                                 { "type": "string"}
+     *                                                                                                                                                                                                                                ]
+     *                                                                                                                                                                                                                            }
      *
      *
-     *                                                                                                                                                                                         }
-     *                                                                                                                                                                                     </pre>
+     *                                                                                                                                                                                                           }
+     *                                                                                                                                                                                                       </pre>
      * @return true if the given type matches the exact value of #dummy in sense of instance type
      * @throws java.lang.IllegalArgumentException if the passed givenClazz is null.
      */

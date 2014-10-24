@@ -1,0 +1,37 @@
+{
+    "id": "http://some.site.somewhere/entry-schema#",
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "description": "schema for an sample attribute ",
+    "type": "object",
+    "required": [ "dummy" ],
+    "properties": {
+
+        "simple": {
+            "type": "string"
+        },
+
+        "dummy": {
+            "$ref": "#/definitions/localisedType"
+        }
+    },
+    "definitions": {
+        "localisedType": {
+            "$schema": "http://json-schema.org/draft-04/schema#",
+            "title": "localized",
+            "oneOf": [
+                {
+                    "type": "string",
+                    "description": "value of property in default language"
+                },
+                {
+                    "type": "object",
+                    "description": "value of property in specific language",
+                    "additionalProperties": {
+                        "type": "string"
+                    }
+                }
+            ]
+        }
+
+    }
+}

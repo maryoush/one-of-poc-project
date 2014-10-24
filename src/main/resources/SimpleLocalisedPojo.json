@@ -1,7 +1,7 @@
 {
-    "id": "http://some.site.somewhere/entry-schema#",
+    "id": "http://some.site.somewhere/entry-schema#localisedAttribute",
     "$schema": "http://json-schema.org/draft-04/schema#",
-    "description": "schema for an sample attribute ",
+    "description": "schema for an sample localised attribute ",
     "type": "object",
     "required": [ "localizedProperty" ],
     "properties": {

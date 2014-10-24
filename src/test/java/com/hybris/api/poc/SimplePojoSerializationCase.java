@@ -1,10 +1,7 @@
 package com.hybris.api.poc;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.DeserializationFeature;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
+import com.hybris.api.poc.mapper.CustomObjectMapperFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -17,16 +14,14 @@ public class SimplePojoSerializationCase {
 
 
     private ObjectMapper getObjectMapper() {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.enable(SerializationFeature.INDENT_OUTPUT);
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true);
-        mapper.configure(DeserializationFeature.READ_ENUMS_USING_TO_STRING, true);
-        mapper.configure(SerializationFeature.WRITE_ENUMS_USING_TO_STRING, true);
-        return mapper;
+        return CustomObjectMapperFactory.createMapper();
     }
 
+
+//    class CustomRootDeserializer extends DelegatingDeserializer
+//    {
+//
+//    }
 
 
     @Test
@@ -49,7 +44,7 @@ public class SimplePojoSerializationCase {
 
         final String serializedPojo = getObjectMapper().writeValueAsString(pojo);
 
-        final String  expected = "{\n" +
+        final String expected = "{\n" +
                 "  \"simple\" : \"simple\",\n" +
                 "  \"dummy\" : {\n" +
                 "    \"bar\" : \"bar one \",\n" +
@@ -61,11 +56,10 @@ public class SimplePojoSerializationCase {
                 "  }\n" +
                 "}";
 
-        Assert.assertEquals(expected,serializedPojo);
+        Assert.assertEquals(expected, serializedPojo);
 
 
     }
-
 
 
     @Test
@@ -95,9 +89,8 @@ public class SimplePojoSerializationCase {
                 "  \"other\" : 12\n" +
                 "}";
 
-        Assert.assertEquals(expected,serializedPojo);
+        Assert.assertEquals(expected, serializedPojo);
     }
-
 
 
 }

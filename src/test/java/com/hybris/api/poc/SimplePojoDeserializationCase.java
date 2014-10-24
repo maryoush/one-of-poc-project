@@ -5,6 +5,10 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.databind.deser.BeanDeserializerFactory;
+import com.fasterxml.jackson.databind.deser.DefaultDeserializationContext;
+import com.hybris.api.poc.mapper.CustomDeserializationContext;
+import com.hybris.api.poc.mapper.CustomObjectMapperFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -14,8 +18,6 @@ import java.io.IOException;
  * Deserialization use cases test
  */
 public class SimplePojoDeserializationCase {
-
-
 
 
     private static final String SCHEMA_BAR_TYPE = "{\n" +
@@ -37,7 +39,7 @@ public class SimplePojoDeserializationCase {
             "  \"simple\" : \"simple\",\n" +
             "  \"dummy\" : {\n" +
             "    \"foo\" : \"hi foo as dummy\"\n" +
-            "  }\n"+
+            "  }\n" +
             "}";
 
     private static final String SCHEMA_AMBIGUOUS = "{\n" +
@@ -65,19 +67,12 @@ public class SimplePojoDeserializationCase {
             "}";
 
     private ObjectMapper getObjectMapper() {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.enable(SerializationFeature.INDENT_OUTPUT);
-        mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-        mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
-        mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true);
-        mapper.configure(DeserializationFeature.READ_ENUMS_USING_TO_STRING, true);
-        mapper.configure(SerializationFeature.WRITE_ENUMS_USING_TO_STRING, true);
-        return mapper;
+
+        return CustomObjectMapperFactory.createMapper();
     }
 
 
-
-    @Test(expected =  JsonMappingException.class)
+    @Test(expected = JsonMappingException.class)
     public void useCaseDeserializationForWrongSchema() throws IOException {
 
         ObjectMapper mapper = getObjectMapper();
@@ -108,6 +103,7 @@ public class SimplePojoDeserializationCase {
 
     /**
      * other property is empty since it does not support foo type
+     *
      * @throws IOException
      */
     @Test
@@ -129,6 +125,7 @@ public class SimplePojoDeserializationCase {
 
     /**
      * other is null  since it does not support string
+     *
      * @throws IOException
      */
     @Test
@@ -149,6 +146,7 @@ public class SimplePojoDeserializationCase {
 
     /**
      * only other is not  null  since it does support number
+     *
      * @throws IOException
      */
     @Test
